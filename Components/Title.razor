@@ -1,0 +1,13 @@
+﻿<div style="border-left-width: medium; border-left-style: solid; border-left-color: coral; margin-left:5px;">
+    <p style="color:coral">\begin(Title)</p>
+
+    <h2 title="RenderFragment ChildContent">@ChildContent</h2>
+
+    <p>This text is set in this child component.</p>
+    <p style="color:coral">\end(Title)</p>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

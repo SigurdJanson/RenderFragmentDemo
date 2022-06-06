@@ -1,0 +1,97 @@
+﻿@page "/"
+
+<PageTitle>RenderFragments</PageTitle>
+
+<h1>Hello, world!</h1>
+
+@RenderWelcomeInfo
+
+<p>
+    @RenderThis
+</p>
+
+Learn more about render fragments:
+<ul>
+    @foreach(var lit in LiteratureSources)
+    {
+        @RenderLiteratureSource(lit)
+    }
+</ul>
+
+<p>
+    @RenderThis
+</p>
+
+
+
+<h2>DateTime Rendering</h2>
+
+@RenderNow("date")
+@RenderNow("time")
+@RenderNow("unknown format")
+
+
+<h2>Icons</h2>
+
+<i class="fa-solid fa-user"></i>
+
+@FontAwesome.Solid.Anchor
+
+
+@code
+{
+    // TYPE 1
+    protected RenderFragment RenderThis = @<span title = "I was a render fragment, once" class="fragged">
+            You can use me many times without per-component overhead
+        </span>;
+
+    
+    // TYPE 2 - Arrow Function Delegate
+    private RenderFragment RenderWelcomeInfo = __builder =>
+    {
+        <p class="welcome">Welcome to your new app!</p><p>New</p>
+    };
+
+
+    // TYPE 3: Parametrized Arrow Function Delegate
+    public class Source
+    {
+        public Source(string title, string url)
+        {
+            Title = title; Url = url;
+        }
+        public string Title { get; set; }
+        public string Url { get; set; }
+    }
+
+    List<Source> LiteratureSources = new()
+    {
+        new Source("ASP.NET Core Blazor performance best practices", "https://t1p.de/mizx1"),
+        new Source("Blazor University", "https://t1p.de/ps2nk")
+    };
+
+    private RenderFragment<Source> RenderLiteratureSource = LibSource => __builder =>
+    {
+        <li class="source">
+            <a href=@LibSource.Url>
+                <span class="stitle">@LibSource.Title</span>
+            </a>
+        </li>
+    };
+
+
+    // TYPE 4: Method
+    private RenderFragment RenderNow(string ClassName)
+    {
+        if (ClassName == "time")
+        {
+            return @<p class="now">⏲ @DateTime.Now.ToString("T")</p>;
+        }
+        else if (ClassName == "date")
+        {
+            return @<p class=@ClassName>📆 @DateTime.Now.ToShortDateString()</p>;
+        }
+
+        return @<p>I cannot show you date or time because I wasn't given a format that I understand.</p>;
+    }
+}
